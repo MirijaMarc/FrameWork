@@ -1,4 +1,4 @@
-package servlet;
+package etu1900.framework.servlet;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
