@@ -1,5 +1,6 @@
 package etu1900.framework.servlet;
 
+import etu1900.framework.Mapping;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
