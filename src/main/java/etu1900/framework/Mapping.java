@@ -4,6 +4,7 @@ public class Mapping {
     String className;
     String Method;
 
+
     public Mapping(String className, String method) {
         this.className = className;
         Method = method;
