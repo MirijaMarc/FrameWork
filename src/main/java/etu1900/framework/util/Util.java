@@ -32,9 +32,7 @@ public class Util {
         ArrayList<String> allClasseName = Util.getAllCLassName(f,new ArrayList<String>(),"");
         for (String s : allClasseName) {
             Class c = Class.forName(s);
-            if (c.getAnnotations().length>0){
                 allclass.add(c);
-            }
         }
         return allclass;
     }
