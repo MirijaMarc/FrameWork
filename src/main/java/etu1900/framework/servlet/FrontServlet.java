@@ -8,6 +8,7 @@ import etu1900.framework.util.Util;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.util.HashMap;
 
 public class FrontServlet extends HttpServlet {
@@ -17,10 +18,12 @@ public class FrontServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-        ClassLoader cloader = getServletContext().getClassLoader();
-        String path = cloader.getResource("/").getPath();
-        File f = new File(path);
         try {
+        URL urlpath = getServletContext().getResource("/WEB-INF/classes/");
+        String path = urlpath.getPath();
+        System.out.println(path);
+        File f = new File(path);
+
             Util.initHashMap(f,MappingUrls);
         }catch (Exception e){
             e.printStackTrace();
