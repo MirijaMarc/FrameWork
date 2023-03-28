@@ -3,6 +3,7 @@ package etu1900.framework.servlet;
 import etu1900.framework.Mapping;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
+import etu1900.framework.util.ModelView;
 import etu1900.framework.util.Util;
 
 import java.io.File;
@@ -44,10 +45,21 @@ public class FrontServlet extends HttpServlet {
     }
 
     public void processRequest(HttpServletRequest request,  HttpServletResponse response)throws IOException{
-        PrintWriter out = response.getWriter();
-        ClassLoader cloader = getServletContext().getClassLoader();
-        String path = cloader.getResource("/").getPath();
-        out.println(path);
+        try {
+            PrintWriter out = response.getWriter();
+            String key = Util.getURL(request);
+            if(MappingUrls.containsKey(key)){
+                Mapping map = MappingUrls.get(key);
+                Class load = Class.forName(map.getClassName());
+                Object obj = load.getConstructor().newInstance();
+                ModelView mv = (ModelView)(load.getDeclaredMethod(map.getMethod()).invoke(obj));
+                RequestDispatcher dispatch = request.getRequestDispatcher(mv.getView());
+                dispatch.forward(request,response);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+       
 
     }
 
