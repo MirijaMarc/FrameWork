@@ -20,17 +20,15 @@ public class FrontServlet extends HttpServlet {
     public void init() throws ServletException {
         super.init();
         try {
-        ClassLoader loader = getServletContext().getClassLoader();
-        URI uri =loader.getResource("").toURI();
-        System.out.println(uri);
-        File f = new File(uri);
-            System.out.println(f.exists());
-
+            ClassLoader loader = getServletContext().getClassLoader();
+            URI uri =loader.getResource("").toURI();
+            System.out.println(uri);
+            File f = new File(uri);
             Util.initHashMap(f,MappingUrls);
+            System.out.println(MappingUrls.isEmpty());
         }catch (Exception e){
             e.printStackTrace();
         }
-        System.out.println("salut");
 
 
     }
