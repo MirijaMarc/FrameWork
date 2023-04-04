@@ -12,6 +12,7 @@ import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 public class FrontServlet extends HttpServlet {
     HashMap<String, Mapping> MappingUrls =new HashMap<String,Mapping>();
@@ -53,6 +54,10 @@ public class FrontServlet extends HttpServlet {
                 Class load = Class.forName(map.getClassName());
                 Object obj = load.getConstructor().newInstance();
                 ModelView mv = (ModelView)(load.getDeclaredMethod(map.getMethod()).invoke(obj));
+                HashMap<String, Object> data = mv.getData();
+                for(Entry mapentry : data.entrySet()){
+                    request.setAttribute((String)mapentry.getKey(),mapentry.getValue());
+                }
                 RequestDispatcher dispatch = request.getRequestDispatcher(mv.getView());
                 dispatch.forward(request,response);
             }
