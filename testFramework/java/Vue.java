@@ -8,4 +8,9 @@ public class Vue {
     public ModelView getJSP(){
         return new ModelView("hello.jsp");
     }
+
+    @Crud(url="/formulaire")
+    public ModelView getFormulaire(){
+        return new ModelView("formulaire.jsp");
+    }
 }
