@@ -58,8 +58,6 @@ public class FrontServlet extends HttpServlet {
                 Field[] attributs = load.getDeclaredFields();
                 out.println("midira");
                 for(Field attribut : attributs){
-                    String texte = attribut.getName();
-                    String resultat = texte.substring(0, 1).toUpperCase() + texte.substring(1).toLowerCase();
                     if(request.getParameter(attribut.getName())!=null){
                         Field nomField=load.getDeclaredField(attribut.getName());
                         nomField.setAccessible(true);
