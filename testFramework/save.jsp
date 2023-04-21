@@ -1,3 +1,8 @@
+<%@page import="model.Emp" %>
+
+<%
+Emp valeur= (Emp)request.getAttribute("emp");
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +12,14 @@
     <title>Document</title>
 </head>
 <body>
-    Bonjour Mirija
+    <% 
+    out.println(valeur.getNom());
+    out.println(valeur.getPrenom());
+    out.println(valeur.getDatenaissance());
+    %>
+        
+
+   
+    
 </body>
 </html>
