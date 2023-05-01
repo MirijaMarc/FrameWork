@@ -7,8 +7,8 @@
     <title>Document</title>
 </head>
 <body>
-    <form action="/framework/findById" method="post">
-        <p>id:<input type="text" name="nom"></p>
+    <form action="/framework/findById" method="get">
+        <p>id:<input type="text" name="id"></p>
         <p><input type="submit" value="Valider"></p>
     </form>
 </body>

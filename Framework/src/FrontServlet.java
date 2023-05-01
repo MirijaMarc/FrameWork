@@ -62,13 +62,20 @@ public class FrontServlet extends HttpServlet {
                 out.println("midira");
                 Enumeration<String> parameterNames = request.getParameterNames();
                 String[] params = Util.getParameters(parameterNames, request);
+                System.out.println(params.length);
+                for (String string : params) {
+                    System.out.println(string);
+                }
                 Method[] methods = load.getDeclaredMethods();
                 ModelView mv = new ModelView();
                 for(Field attribut : attributs){
                     if(request.getParameter(attribut.getName())!=null){
                         Field nomField=load.getDeclaredField(attribut.getName());
                         nomField.setAccessible(true);
-                        nomField.set(obj, request.getParameter(attribut.getName()));
+                        if (nomField.getType() == int.class) nomField.set(obj, Integer.parseInt( request.getParameter(attribut.getName())));
+                        else if (nomField.getType() == double.class) nomField.set(obj, Double.parseDouble( request.getParameter(attribut.getName())));
+                        else if (nomField.getType() == float.class) nomField.set(obj, Float.parseFloat( request.getParameter(attribut.getName())));
+                        else nomField.set(obj, request.getParameter(attribut.getName()));
                     }
                 }
                 for (Method method : methods) {
