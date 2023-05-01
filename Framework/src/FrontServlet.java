@@ -11,10 +11,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.*;
 
 public class FrontServlet extends HttpServlet {
     HashMap<String, Mapping> MappingUrls =new HashMap<String,Mapping>();
@@ -51,12 +53,17 @@ public class FrontServlet extends HttpServlet {
         try {
             PrintWriter out = response.getWriter();
             String key = Util.getURL(request);
+            System.out.println(key);
             if(MappingUrls.containsKey(key)){
                 Mapping map = MappingUrls.get(key);
                 Class load = Class.forName(map.getClassName());
                 Object obj = load.getConstructor().newInstance();
                 Field[] attributs = load.getDeclaredFields();
                 out.println("midira");
+                Enumeration<String> parameterNames = request.getParameterNames();
+                String[] params = Util.getParameters(parameterNames, request);
+                Method[] methods = load.getDeclaredMethods();
+                ModelView mv = new ModelView();
                 for(Field attribut : attributs){
                     if(request.getParameter(attribut.getName())!=null){
                         Field nomField=load.getDeclaredField(attribut.getName());
@@ -64,11 +71,21 @@ public class FrontServlet extends HttpServlet {
                         nomField.set(obj, request.getParameter(attribut.getName()));
                     }
                 }
-                ModelView mv = (ModelView)(load.getDeclaredMethod(map.getMethod()).invoke(obj));
+                for (Method method : methods) {
+                    if (method.getName().equals(map.getMethod())){
+                        if (method.getParameterTypes().length>0){
+                            Object[] parametres = Util.castParameters(params, method);
+                            mv = (ModelView)(method.invoke(obj, parametres));
+                        }
+                        else{
+                            mv = (ModelView)(method.invoke(obj));
+                        }
+                    }
+                }
                 HashMap<String, Object> data = mv.getData();
                 for(Entry mapentry : data.entrySet()){
                     request.setAttribute((String)mapentry.getKey(),mapentry.getValue());
-                }
+                } 
                 RequestDispatcher dispatch = request.getRequestDispatcher(mv.getView());
                 dispatch.forward(request,response);
                 

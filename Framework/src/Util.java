@@ -6,10 +6,42 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.http.HttpRequest;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 
 public class Util {
+
+
+    public static Object[] castParameters(String[] params, Method m){
+        Object[] rep = new Object[params.length];
+        for (int i = 0; i < rep.length; i++) {
+            Class<?>[] parametersTypes= m.getParameterTypes();
+            if (parametersTypes[i] == int.class) rep[i]= Integer.valueOf(params[i]);
+            else if (parametersTypes[i] == double.class) rep[i]= Double.valueOf(params[i]);
+            else if (parametersTypes[i] == float.class) rep[i]= Float.valueOf(params[i]);
+            else rep[i]= parametersTypes[i].cast(params[i]);
+        }
+        return rep;
+    }
+
+
+    public static String[] getParameters(Enumeration<String> values,HttpServletRequest request){
+        ArrayList<String> list = new ArrayList<>();
+        while (values.hasMoreElements()) {
+            list.add(values.nextElement());
+        }
+        String [] nomparams = new String[list.size()];
+        nomparams= list.toArray(nomparams);
+        String[] rep = new String[list.size()];
+        for (int i = 0; i < rep.length; i++) {
+            rep[i] = request.getParameter(nomparams[i]); 
+        }
+        return rep;
+
+    }
 
 
     public static void initHashMap(File f, HashMap<String, Mapping> mappingUrls)throws Exception{
@@ -67,24 +99,24 @@ public class Util {
         String url =request.getRequestURI();
         String[] tab = url.split("/");
         String rep ="";
-        for(int i=2;i<tab.length;i++){
-            if(i==2){
-                if (i== tab.length-1) {
-                    rep = "/" + rep.concat(tab[i]);
-                }else {
-                    rep = "/" + rep.concat(tab[i]).concat("/");
-                }
-            }
-            else{
-                if (i== tab.length-1){
-                    rep= rep.concat(tab[i]);
-                }else {
-                    rep=rep.concat(tab[i]).concat("/");
-                }
+        // for(int i=2;i<tab.length;i++){
+        //     if(i==2){
+        //         if (i== tab.length-1) {
+        //             rep = "/" + rep.concat(tab[i]);
+        //         }else {
+        //             rep = "/" + rep.concat(tab[i]).concat("/");
+        //         }
+        //     }
+        //     else{
+        //         if (i== tab.length-1){
+        //             rep= rep.concat(tab[i]);
+        //         }else {
+        //             rep=rep.concat(tab[i]).concat("/");
+        //         }
 
-            }
-        }
-        return rep;
+        //     }
+        // }
+        return "/"+tab[2];
     }
 
 

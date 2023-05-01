@@ -13,6 +13,7 @@ Emp valeur= (Emp)request.getAttribute("emp");
 </head>
 <body>
     <% 
+    out.println(valeur.getId());
     out.println(valeur.getNom());
     out.println(valeur.getPrenom());
     out.println(valeur.getDatenaissance());

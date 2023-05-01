@@ -1,19 +1,36 @@
 package model;
 
 import etu1900.framework.util.Crud;
+import etu1900.framework.util.Model;
 import etu1900.framework.util.ModelView;
 
 
 
 public class Emp {
+    int id;
     String nom;
     String prenom;
     String datenaissance;
+
+    public Emp(int id, String nom, String prenom, String datenaissance) {
+        this.id = id;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.datenaissance = datenaissance;
+    }
 
     public Emp(){}
 
     public Emp(String n){
         this.nom=n;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
     
     public Emp(String n, String p, String dtn){
@@ -64,8 +81,18 @@ public class Emp {
     public ModelView save(){
         ModelView mv =new ModelView();
         Emp emp= new Emp(this.nom, this.prenom,this.datenaissance);
+        emp.setId(1);
         mv.setView("save.jsp");
         mv.addItem("emp",emp);
+        return mv;
+    }
+
+    @Crud(url = "/findById")
+    public ModelView findById(int id){
+        ModelView mv = new ModelView();
+        Emp result = new Emp(id, "mirija", "marc", "30/11/23");
+        mv.setView("save.jsp");
+        mv.addItem("emp", result);
         return mv;
     }
 
