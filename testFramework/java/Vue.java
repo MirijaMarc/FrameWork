@@ -13,4 +13,11 @@ public class Vue {
     public ModelView getFormulaire(){
         return new ModelView("formulaire.jsp");
     }
+
+    @Crud(url="/recherche")
+    public ModelView recherche(){
+        return new ModelView("recherche.jsp");
+    }
+
+
 }
