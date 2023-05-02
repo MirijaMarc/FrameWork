@@ -3,6 +3,8 @@ package etu1900.framework.util;
 import etu1900.framework.Mapping;
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.beans.PropertyEditorManager;
+import java.beans.PropertyEditorSupport;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -14,6 +16,11 @@ import java.util.List;
 
 public class Util {
 
+    public static <T> T convert (String value, Class<T> type){
+        PropertyEditorSupport editor = (PropertyEditorSupport) PropertyEditorManager.findEditor(type);
+        editor.setAsText(value);
+        return (T) editor.getValue();
+    }
 
     public static Object[] castParameters(String[] params, Method m){
         Object[] rep = new Object[params.length];
