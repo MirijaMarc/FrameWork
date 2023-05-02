@@ -16,11 +16,6 @@ import java.util.List;
 
 public class Util {
 
-    public static <T> T convert (String value, Class<T> type){
-        PropertyEditorSupport editor = (PropertyEditorSupport) PropertyEditorManager.findEditor(type);
-        editor.setAsText(value);
-        return (T) editor.getValue();
-    }
 
     public static Object[] castParameters(String[] params, Method m){
         Object[] rep = new Object[params.length];
@@ -31,20 +26,24 @@ public class Util {
         return rep;
     }
 
+    
+    public static <T> T convert (String value, Class<T> type){
+        PropertyEditorSupport editor = (PropertyEditorSupport) PropertyEditorManager.findEditor(type);
+        editor.setAsText(value);
+        return (T) editor.getValue();
+    }
+
 
     public static String[] getParameters(Enumeration<String> values,HttpServletRequest request){
         ArrayList<String> list = new ArrayList<>();
         while (values.hasMoreElements()) {
             list.add(values.nextElement());
         }
-        String [] nomparams = new String[list.size()];
-        nomparams= list.toArray(nomparams);
         String[] rep = new String[list.size()];
         for (int i = 0; i < rep.length; i++) {
-            rep[i] = request.getParameter(nomparams[i]); 
+            rep[i] = request.getParameter(list.get(i)); 
         }
         return rep;
-
     }
 
 
@@ -103,23 +102,6 @@ public class Util {
         String url =request.getRequestURI();
         String[] tab = url.split("/");
         String rep ="";
-        // for(int i=2;i<tab.length;i++){
-        //     if(i==2){
-        //         if (i== tab.length-1) {
-        //             rep = "/" + rep.concat(tab[i]);
-        //         }else {
-        //             rep = "/" + rep.concat(tab[i]).concat("/");
-        //         }
-        //     }
-        //     else{
-        //         if (i== tab.length-1){
-        //             rep= rep.concat(tab[i]);
-        //         }else {
-        //             rep=rep.concat(tab[i]).concat("/");
-        //         }
-
-        //     }
-        // }
         return "/"+tab[2];
     }
 

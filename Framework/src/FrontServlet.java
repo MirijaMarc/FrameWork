@@ -60,14 +60,6 @@ public class FrontServlet extends HttpServlet {
                 Object obj = load.getConstructor().newInstance();
                 Field[] attributs = load.getDeclaredFields();
                 out.println("midira");
-                Enumeration<String> parameterNames = request.getParameterNames();
-                String[] params = Util.getParameters(parameterNames, request);
-                System.out.println(params.length);
-                for (String string : params) {
-                    System.out.println(string);
-                }
-                Method[] methods = load.getDeclaredMethods();
-                ModelView mv = new ModelView();
                 for(Field attribut : attributs){
                     if(request.getParameter(attribut.getName())!=null){
                         Field nomField=load.getDeclaredField(attribut.getName());
@@ -76,6 +68,10 @@ public class FrontServlet extends HttpServlet {
                         nomField.set(obj, Util.convert(value, nomField.getType()));
                     }
                 }
+                Enumeration<String> parameterNames = request.getParameterNames();
+                String[] params = Util.getParameters(parameterNames, request);
+                ModelView mv = new ModelView();
+                Method[] methods = load.getDeclaredMethods();
                 for (Method method : methods) {
                     if (method.getName().equals(map.getMethod())){
                         if (method.getParameterTypes().length>0){
