@@ -26,10 +26,7 @@ public class Util {
         Object[] rep = new Object[params.length];
         for (int i = 0; i < rep.length; i++) {
             Class<?>[] parametersTypes= m.getParameterTypes();
-            if (parametersTypes[i] == int.class) rep[i]= Integer.valueOf(params[i]);
-            else if (parametersTypes[i] == double.class) rep[i]= Double.valueOf(params[i]);
-            else if (parametersTypes[i] == float.class) rep[i]= Float.valueOf(params[i]);
-            else rep[i]= parametersTypes[i].cast(params[i]);
+            rep[i] = convert(params[i], parametersTypes[i]);
         }
         return rep;
     }
