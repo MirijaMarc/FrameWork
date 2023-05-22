@@ -1,0 +1,7 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "d:\\Mirija\\ITU\\S3\\ProjetTahiana\\apache-tomcat-10.0.22\\lib\\servlet-api.jar",
+        "testFramework/WEB-INF/lib/framework.jar"
+    ]
+}
