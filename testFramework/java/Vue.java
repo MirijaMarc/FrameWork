@@ -9,15 +9,22 @@ public class Vue {
         return new ModelView("hello.jsp");
     }
 
-    @Crud(url="/formulaire")
+    @Crud(url="/formulaire.go")
     public ModelView getFormulaire(){
         return new ModelView("formulaire.jsp");
     }
 
-    @Crud(url="/recherche")
+    @Crud(url="/recherche.go")
     public ModelView recherche(){
         return new ModelView("recherche.jsp");
     }
+
+    @Crud(url="/upload.go")
+    public ModelView upload(){
+        return new ModelView("test.jsp");
+    }
+
+   
 
 
 }

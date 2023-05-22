@@ -54,7 +54,13 @@ public class FrontServlet extends HttpServlet {
             PrintWriter out = response.getWriter();
             String key = Util.getURL(request);
             System.out.println(key);
+            // for(Entry mapentry : MappingUrls.entrySet()){
+            //    Mapping m = (Mapping) mapentry.getValue();
+            //    System.out.println(m.getMethod());
+            // } 
+            System.out.println("mirija");
             if(MappingUrls.containsKey(key)){
+                System.out.println("tokyu");
                 Mapping map = MappingUrls.get(key);
                 Class load = Class.forName(map.getClassName());
                 Object obj = load.getConstructor().newInstance();

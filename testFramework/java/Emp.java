@@ -63,7 +63,7 @@ public class Emp {
         this.nom=n;
     }
 
-    @Crud(url = "/emp-all")
+    @Crud(url = "/emp-all.go")
     public ModelView findALl(){
         ModelView mv = new ModelView();
         Emp[] listes= new Emp[5];
@@ -87,7 +87,7 @@ public class Emp {
         return mv;
     }
 
-    @Crud(url = "/findById")
+    @Crud(url = "/findById.go")
     public ModelView findById(int id){
         ModelView mv = new ModelView();
         Emp result = new Emp(id, "mirija", "marc", "30/11/23");
