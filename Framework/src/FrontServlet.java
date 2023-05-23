@@ -82,10 +82,6 @@ public class FrontServlet extends HttpServlet {
                         attribut.set(obj, Util.convert(value, attribut.getType()));
                     }  
                 }
-                for (Field f : obj.getClass().getDeclaredFields()) {
-                    f.setAccessible(true);
-                    System.out.println(f.get(obj));
-                }
                 for (Method method : methods) {
                     if (method.getName().equals(map.getMethod())){
                         if (method.getParameterTypes().length>0){
