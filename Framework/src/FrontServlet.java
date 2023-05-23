@@ -33,10 +33,8 @@ public class FrontServlet extends HttpServlet {
         try {
             ClassLoader loader = getServletContext().getClassLoader();
             URI uri =loader.getResource("").toURI();
-            System.out.println(uri);
             File f = new File(uri);
             Util.initHashMap(f,MappingUrls);
-            System.out.println(MappingUrls.isEmpty());
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -58,8 +56,6 @@ public class FrontServlet extends HttpServlet {
         try {
             PrintWriter out = response.getWriter();
             String key = Util.getURL(request);
-            System.out.println(key);
-            System.out.println("mirija");
             if(MappingUrls.containsKey(key)){
                 Mapping map = MappingUrls.get(key);
                 Class load = Class.forName(map.getClassName());
@@ -68,25 +64,18 @@ public class FrontServlet extends HttpServlet {
                 Enumeration<String> parameterNames = request.getParameterNames();
                 String[] params = Util.getParameters(parameterNames, request);
                 System.out.println(params.length);
-                // for (String string : params) {
-                //     System.out.println(string);
-                // }
                 Method[] methods = load.getDeclaredMethods();
                 ModelView mv = new ModelView();
                 for(Field attribut : attributs){
-                    System.out.println(attribut.getName()+" =attribut Name");
-                    System.out.println(request.getParameter(attribut.getName())+" =Valeur Name");
                     if (attribut.getType() == FileUpload.class){
-                        if(request.getPart(attribut.getName())!=null){
-                            attribut.setAccessible(true);
-                            Part p = request.getPart(attribut.getName());
-                            InputStream input = p.getInputStream();
-                            String fileName = Paths.get(p.getSubmittedFileName()).getFileName().toString(); 
-                            byte[] bytes = input.readAllBytes();
-                            FileUpload f = new FileUpload(fileName,bytes);
-                            attribut.set(obj, f);
-                        }
-                    }  
+                        attribut.setAccessible(true);
+                        Part p = request.getPart(attribut.getName());
+                        InputStream input = p.getInputStream();
+                        String fileName = Paths.get(p.getSubmittedFileName()).getFileName().toString(); 
+                        byte[] bytes = input.readAllBytes();
+                        FileUpload f = new FileUpload(fileName,bytes);
+                        attribut.set(obj, f);
+                    }
                     if(request.getParameter(attribut.getName())!=null){
                         attribut.setAccessible(true);
                         String value = request.getParameter(attribut.getName());
