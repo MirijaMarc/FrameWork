@@ -7,7 +7,7 @@
     <title>Document</title>
 </head>
 <body>
-    <form action="/framework/findById" method="get">
+    <form action="/framework/findById.go" method="get">
         <p>id:<input type="text" name="id"></p>
         <p><input type="submit" value="Valider"></p>
     </form>
