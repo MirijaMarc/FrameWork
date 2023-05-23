@@ -17,6 +17,7 @@ Emp valeur= (Emp)request.getAttribute("emp");
     out.println(valeur.getNom());
     out.println(valeur.getPrenom());
     out.println(valeur.getDatenaissance());
+    out.println(valeur.getCv().getName());
     %>
         
 

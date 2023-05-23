@@ -4,7 +4,7 @@ import etu1900.framework.util.ModelView;
 
 public class Vue {
     
-    @Crud(url="/mirija")
+    @Crud(url="/mirija.go")
     public ModelView getJSP(){
         return new ModelView("hello.jsp");
     }

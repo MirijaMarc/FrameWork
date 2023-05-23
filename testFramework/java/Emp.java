@@ -1,16 +1,15 @@
 package model;
 
 import etu1900.framework.util.Crud;
-import etu1900.framework.util.Model;
+import etu1900.framework.util.FileUpload;
 import etu1900.framework.util.ModelView;
-
-
 
 public class Emp {
     int id;
     String nom;
     String prenom;
     String datenaissance;
+    FileUpload cv;
 
     public Emp(int id, String nom, String prenom, String datenaissance) {
         this.id = id;
@@ -21,10 +20,32 @@ public class Emp {
 
     public Emp(){}
 
+    public Emp(String nom, String prenom, String datenaissance, FileUpload cv) {
+        this.nom = nom;
+        this.prenom = prenom;
+        this.datenaissance = datenaissance;
+        this.cv = cv;
+    }
+
+    public Emp(String n, String p, String dtn){
+        setNom(n);
+        setPrenom(p);
+        setDatenaissance(dtn);
+    }
+
     public Emp(String n){
         this.nom=n;
     }
 
+    public FileUpload getCv() {
+        return cv;
+    }
+
+    public void setCv(FileUpload cv) {
+        this.cv = cv;
+    }
+
+    
     public int getId() {
         return id;
     }
@@ -33,11 +54,6 @@ public class Emp {
         this.id = id;
     }
     
-    public Emp(String n, String p, String dtn){
-        setNom(n);
-        setPrenom(p);
-        setDatenaissance(dtn);
-    }
 
     public String getNom(){
         return this.nom;
@@ -58,7 +74,6 @@ public class Emp {
         this.prenom = prenom;
     }
 
-
     public void setNom(String n){
         this.nom=n;
     }
@@ -77,10 +92,10 @@ public class Emp {
         return mv;
     }
 
-    @Crud(url = "/emp-save")
+    @Crud(url = "/emp-save.go")
     public ModelView save(){
         ModelView mv =new ModelView();
-        Emp emp= new Emp(this.nom, this.prenom,this.datenaissance);
+        Emp emp= new Emp(this.nom, this.prenom,this.datenaissance,this.cv);
         emp.setId(1);
         mv.setView("save.jsp");
         mv.addItem("emp",emp);
@@ -95,5 +110,6 @@ public class Emp {
         mv.addItem("emp", result);
         return mv;
     }
+
 
 }

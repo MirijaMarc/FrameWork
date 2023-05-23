@@ -2,22 +2,27 @@ package etu1900.framework.servlet;
 
 import etu1900.framework.Mapping;
 import jakarta.servlet.*;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.*;
 import etu1900.framework.util.Model;
 import etu1900.framework.util.ModelView;
+import etu1900.framework.util.FileUpload;
 import etu1900.framework.util.Util;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.*;
 
+@MultipartConfig
 public class FrontServlet extends HttpServlet {
     HashMap<String, Mapping> MappingUrls =new HashMap<String,Mapping>();
 
@@ -54,33 +59,43 @@ public class FrontServlet extends HttpServlet {
             PrintWriter out = response.getWriter();
             String key = Util.getURL(request);
             System.out.println(key);
-            // for(Entry mapentry : MappingUrls.entrySet()){
-            //    Mapping m = (Mapping) mapentry.getValue();
-            //    System.out.println(m.getMethod());
-            // } 
             System.out.println("mirija");
             if(MappingUrls.containsKey(key)){
-                System.out.println("tokyu");
                 Mapping map = MappingUrls.get(key);
                 Class load = Class.forName(map.getClassName());
                 Object obj = load.getConstructor().newInstance();
                 Field[] attributs = load.getDeclaredFields();
-                out.println("midira");
                 Enumeration<String> parameterNames = request.getParameterNames();
                 String[] params = Util.getParameters(parameterNames, request);
                 System.out.println(params.length);
-                for (String string : params) {
-                    System.out.println(string);
-                }
+                // for (String string : params) {
+                //     System.out.println(string);
+                // }
                 Method[] methods = load.getDeclaredMethods();
                 ModelView mv = new ModelView();
                 for(Field attribut : attributs){
+                    System.out.println(attribut.getName()+" =attribut Name");
+                    System.out.println(request.getParameter(attribut.getName())+" =Valeur Name");
+                    if (attribut.getType() == FileUpload.class){
+                        if(request.getPart(attribut.getName())!=null){
+                            attribut.setAccessible(true);
+                            Part p = request.getPart(attribut.getName());
+                            InputStream input = p.getInputStream();
+                            String fileName = Paths.get(p.getSubmittedFileName()).getFileName().toString(); 
+                            byte[] bytes = input.readAllBytes();
+                            FileUpload f = new FileUpload(fileName,bytes);
+                            attribut.set(obj, f);
+                        }
+                    }  
                     if(request.getParameter(attribut.getName())!=null){
-                        Field nomField=load.getDeclaredField(attribut.getName());
-                        nomField.setAccessible(true);
+                        attribut.setAccessible(true);
                         String value = request.getParameter(attribut.getName());
-                        nomField.set(obj, Util.convert(value, nomField.getType()));
-                    }
+                        attribut.set(obj, Util.convert(value, attribut.getType()));
+                    }  
+                }
+                for (Field f : obj.getClass().getDeclaredFields()) {
+                    f.setAccessible(true);
+                    System.out.println(f.get(obj));
                 }
                 for (Method method : methods) {
                     if (method.getName().equals(map.getMethod())){
