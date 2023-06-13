@@ -50,6 +50,22 @@ public class Util {
 
     }
 
+     public static void initSingletons(File f, HashMap<String, Object> singletons)throws Exception{
+        ArrayList<String> tab= Util.getAllCLassName(f,new ArrayList<String>(), "");
+        for (String item : tab){
+            Class aClass = Class.forName(item);
+            if (aClass.getAnnotations().length>0){
+                if (aClass.getAnnotations()[0] instanceof Scope){
+                    String value = ((Scope)(aClass.getAnnotations()[0])).value();
+                    if (value.equalsIgnoreCase("singleton")){
+                        Object obj= aClass.getConstructor().newInstance();
+                        singletons.putIfAbsent(item, obj);
+                    }
+                }
+            }
+        }
+    }
+
 
     public static void initHashMap(File f, HashMap<String, Mapping> mappingUrls)throws Exception{
         ArrayList<Class> tab= Util.getALlAnnotedClasse(f);
@@ -77,7 +93,7 @@ public class Util {
     }
 
 
-    public static ArrayList<String>getAllCLassName(File f,ArrayList<String> tab,String pack){
+    public static ArrayList<String> getAllCLassName(File f,ArrayList<String> tab,String pack){
         File[] files = f.listFiles();
         for(int i=0;i<files.length;i++){
             if (files[i].isFile()){
@@ -106,23 +122,6 @@ public class Util {
         String url =request.getRequestURI();
         String[] tab = url.split("/");
         String rep ="";
-        // for(int i=2;i<tab.length;i++){
-        //     if(i==2){
-        //         if (i== tab.length-1) {
-        //             rep = "/" + rep.concat(tab[i]);
-        //         }else {
-        //             rep = "/" + rep.concat(tab[i]).concat("/");
-        //         }
-        //     }
-        //     else{
-        //         if (i== tab.length-1){
-        //             rep= rep.concat(tab[i]);
-        //         }else {
-        //             rep=rep.concat(tab[i]).concat("/");
-        //         }
-
-        //     }
-        // }
         return "/"+tab[2];
     }
 

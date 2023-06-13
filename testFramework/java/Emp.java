@@ -3,7 +3,9 @@ package model;
 import etu1900.framework.util.Crud;
 import etu1900.framework.util.FileUpload;
 import etu1900.framework.util.ModelView;
+import etu1900.framework.util.Scope;
 
+@Scope(value = "singleton")
 public class Emp {
     int id;
     String nom;
