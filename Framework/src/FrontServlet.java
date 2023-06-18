@@ -18,13 +18,13 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.*;
 
 @MultipartConfig
 public class FrontServlet extends HttpServlet {
     HashMap<String, Mapping> MappingUrls =new HashMap<String,Mapping>();
+    HashMap<String, Object> singletons= new HashMap<String, Object>();
 
 
     @Override
@@ -35,6 +35,7 @@ public class FrontServlet extends HttpServlet {
             URI uri =loader.getResource("").toURI();
             File f = new File(uri);
             Util.initHashMap(f,MappingUrls);
+            Util.initSingletons(f, singletons);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -59,7 +60,13 @@ public class FrontServlet extends HttpServlet {
             if(MappingUrls.containsKey(key)){
                 Mapping map = MappingUrls.get(key);
                 Class load = Class.forName(map.getClassName());
-                Object obj = load.getConstructor().newInstance();
+                Object obj=null;
+                if (singletons.get(map.getClassName())!=null){
+                    obj= singletons.get(map.getClassName());
+                }
+                else{
+                    obj= load.getConstructor().newInstance();
+                }
                 Field[] attributs = load.getDeclaredFields();
                 Enumeration<String> parameterNames = request.getParameterNames();
                 String[] params = Util.getParameters(parameterNames, request);
