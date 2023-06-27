@@ -5,6 +5,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.*;
 import etu1900.framework.util.Model;
+import etu1900.framework.util.Auth;
 import etu1900.framework.util.ModelView;
 import etu1900.framework.util.FileUpload;
 import etu1900.framework.util.Util;
@@ -19,7 +20,10 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Map.Entry;
+
+
 import java.util.*;
+
 
 @MultipartConfig
 public class FrontServlet extends HttpServlet {
@@ -55,8 +59,12 @@ public class FrontServlet extends HttpServlet {
 
     public void processRequest(HttpServletRequest request,  HttpServletResponse response)throws IOException{
         try {
+            String contentType = request.getContentType();
             PrintWriter out = response.getWriter();
             String key = Util.getURL(request);
+            HttpSession session = request.getSession();
+            boolean permission = false;
+
             if(MappingUrls.containsKey(key)){
                 Mapping map = MappingUrls.get(key);
                 Class load = Class.forName(map.getClassName());
@@ -74,7 +82,7 @@ public class FrontServlet extends HttpServlet {
                 Method[] methods = load.getDeclaredMethods();
                 ModelView mv = new ModelView();
                 for(Field attribut : attributs){
-                    if (attribut.getType() == FileUpload.class){
+                    if (attribut.getType() == FileUpload.class && contentType!=null && contentType.startsWith("multipart/form-data" )){
                         attribut.setAccessible(true);
                         Part p = request.getPart(attribut.getName());
                         InputStream input = p.getInputStream();
@@ -91,12 +99,40 @@ public class FrontServlet extends HttpServlet {
                 }
                 for (Method method : methods) {
                     if (method.getName().equals(map.getMethod())){
-                        if (method.getParameterTypes().length>0){
-                            Object[] parametres = Util.castParameters(params, method);
-                            mv = (ModelView)(method.invoke(obj, parametres));
+                        Auth auth = method.getAnnotation(Auth.class);
+                        if (auth== null){
+                            permission = true;
                         }
                         else{
+                            String profil= auth.profil(); 
+                            if(session.getAttribute(getInitParameter("sessionName")) != null){
+                                if(profil.equals("")){
+                                    permission = true;
+                                }
+                                else if(session.getAttribute(getInitParameter("sessionName")).equals(profil)){
+                                    permission = true;
+                                }
+                            }else{
+                                if(profil.equals("")){
+                                    permission = true;
+                                }
+                            }
+                        }
+                        if (method.getParameterTypes().length>0){
+                            if (!permission){
+                                throw new Exception("Acces non autorisée");
+                            }
+                            Object[] parametres = Util.castParameters(params, method);
+                            mv = (ModelView)(method.invoke(obj, parametres));
+                            Util.initSession(session, mv);
+                        }
+                        else{
+                            System.out.println("miditra");
+                            if (!permission){
+                                throw new Exception("Acces non autorisée");
+                            }
                             mv = (ModelView)(method.invoke(obj));
+                            Util.initSession(session, mv);
                         }
                     }
                 }
@@ -110,7 +146,9 @@ public class FrontServlet extends HttpServlet {
                 
             }
         } catch (Exception e) {
+            PrintWriter out = response.getWriter();
             e.printStackTrace();
+            out.print(e);
         }
        
 

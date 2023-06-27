@@ -1,6 +1,7 @@
 package model;
 
 import etu1900.framework.util.Crud;
+import etu1900.framework.util.Auth;
 import etu1900.framework.util.FileUpload;
 import etu1900.framework.util.ModelView;
 import etu1900.framework.util.Scope;
@@ -80,6 +81,7 @@ public class Emp {
         this.nom=n;
     }
 
+    @Auth(profil = "Mirija")
     @Crud(url = "/emp-all.go")
     public ModelView findALl(){
         ModelView mv = new ModelView();
