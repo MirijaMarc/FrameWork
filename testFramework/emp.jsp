@@ -14,7 +14,7 @@ Emp[] emp= (Emp[])request.getAttribute("lst");
 <body>
     <% for(int i=0; i<emp.length;i++){ %>
         <p> <%= emp[i].getNom() %></p>
-        <p><%= emp[i].getCv().getFile() %></p>
+
     <% }%>
 
    

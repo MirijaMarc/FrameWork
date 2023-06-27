@@ -6,6 +6,7 @@ import java.util.Map;
 public class ModelView{
     String view;
     HashMap<String, Object> data= new HashMap<String, Object>(); 
+    HashMap<String, Object> sessions = new HashMap<String, Object>();
 
     public ModelView() {
     }
@@ -19,6 +20,14 @@ public class ModelView{
         this.view = view;
     }
 
+    public HashMap<String, Object> getSessions() {
+        return sessions;
+    }
+
+    public void setSessions(HashMap<String, Object> sessions) {
+        this.sessions = sessions;
+    }
+
     public HashMap<String, Object> getData() {
         return data;
     }
@@ -28,6 +37,10 @@ public class ModelView{
 
     public void addItem(String key,Object value){
         this.data.putIfAbsent(key,value);
+    }
+
+    public void addSession(String key, Object value){
+        this.sessions.putIfAbsent(key, value);
     }
 
     
