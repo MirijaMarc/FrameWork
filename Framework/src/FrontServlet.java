@@ -141,17 +141,18 @@ public class FrontServlet extends HttpServlet {
                 if (mv.isJson()){
                     Gson gson = new Gson();
                     HashMap<String, Object> data = mv.getData();
-                    request.setAttribute(mv.getJsonName(), gson.toJson(data));
                     response.setContentType("application/json");
+                    out.print(gson.toJson(data));
                 }else{
                     HashMap<String, Object> data = mv.getData();
                     for(Entry mapentry : data.entrySet()){
                         request.setAttribute((String)mapentry.getKey(),mapentry.getValue());
                     } 
+                    RequestDispatcher dispatch = request.getRequestDispatcher(mv.getView());
+                    dispatch.forward(request,response);
                 }
                 
-                RequestDispatcher dispatch = request.getRequestDispatcher(mv.getView());
-                dispatch.forward(request,response);
+               
                 
                 
             }

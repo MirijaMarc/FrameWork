@@ -1,7 +1,7 @@
 <%@page import="model.Emp" %>
 
 <%
-String json = (String)request.getAttribute("data");
+Emp[] emp= (Emp[])request.getAttribute("lst");
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,7 +12,10 @@ String json = (String)request.getAttribute("data");
     <title>Document</title>
 </head>
 <body>
-    <%= json %>
+    <% for(int i=0; i<emp.length;i++){ %>
+        <p> <%= emp[i].getNom() %></p>
+
+    <% }%>
 
    
     
