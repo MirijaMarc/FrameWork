@@ -10,12 +10,10 @@ public class ModelView{
     boolean isJson;
 
     public ModelView() {
-        setJsonName("data");
         setJson(false);
     }
     public ModelView(String view) {
         setJson(false);
-        setJsonName("data");
         this.view = view;
     }
     public String getView() {
