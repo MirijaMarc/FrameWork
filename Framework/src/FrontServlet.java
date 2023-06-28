@@ -5,6 +5,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.*;
 import etu1900.framework.util.Model;
+import etu1900.framework.util.API;
 import etu1900.framework.util.Auth;
 import etu1900.framework.util.ModelView;
 import etu1900.framework.util.FileUpload;
@@ -81,7 +82,9 @@ public class FrontServlet extends HttpServlet {
                 String[] params = Util.getParameters(parameterNames, request);
                 System.out.println(params.length);
                 Method[] methods = load.getDeclaredMethods();
-                ModelView mv = new ModelView();
+                ModelView mv = null;
+                String json = null;
+                Gson gson = new Gson();
                 for(Field attribut : attributs){
                     if (attribut.getType() == FileUpload.class && contentType!=null && contentType.startsWith("multipart/form-data" )){
                         attribut.setAccessible(true);
@@ -101,6 +104,7 @@ public class FrontServlet extends HttpServlet {
                 for (Method method : methods) {
                     if (method.getName().equals(map.getMethod())){
                         Auth auth = method.getAnnotation(Auth.class);
+                        API api = method.getAnnotation(API.class);
                         if (auth== null){
                             permission = true;
                         }
@@ -119,42 +123,59 @@ public class FrontServlet extends HttpServlet {
                                 }
                             }
                         }
+                        
                         if (method.getParameterTypes().length>0){
                             if (!permission){
                                 throw new Exception("Acces non autorisée");
                             }
                             Object[] parametres = Util.castParameters(params, method);
-                            mv = (ModelView)(method.invoke(obj, parametres));
-                            Util.initSession(session, mv);
+                            if (api == null){
+                                mv = new ModelView();
+                                mv = (ModelView)(method.invoke(obj, parametres));
+                                Util.initSession(session, mv);
+                            }else{
+                                Object output = method.invoke(obj, parametres);
+                                json = gson.toJson(output);
+                            }
+                            
                         }
                         else{
                             System.out.println("miditra");
                             if (!permission){
                                 throw new Exception("Acces non autorisée");
                             }
-                            mv = (ModelView)(method.invoke(obj));
-                            Util.initSession(session, mv);
+                            if (api == null){
+                                mv = new ModelView();
+                                mv = (ModelView)(method.invoke(obj));
+                                Util.initSession(session, mv);
+                            }else{
+                                Object output = method.invoke(obj);
+                                json = gson.toJson(output);
+                            }
                         }
                     }
                 }
-
-                if (mv.isJson()){
-                    Gson gson = new Gson();
+                if (mv != null){
+                    if (mv.isJson()){
                     HashMap<String, Object> data = mv.getData();
                     response.setContentType("application/json");
                     out.print(gson.toJson(data));
-                }else{
-                    HashMap<String, Object> data = mv.getData();
-                    for(Entry mapentry : data.entrySet()){
-                        request.setAttribute((String)mapentry.getKey(),mapentry.getValue());
-                    } 
-                    RequestDispatcher dispatch = request.getRequestDispatcher(mv.getView());
-                    dispatch.forward(request,response);
+                    }else{
+                        HashMap<String, Object> data = mv.getData();
+                        for(Entry mapentry : data.entrySet()){
+                            request.setAttribute((String)mapentry.getKey(),mapentry.getValue());
+                        } 
+                        RequestDispatcher dispatch = request.getRequestDispatcher(mv.getView());
+                        dispatch.forward(request,response);
+                    }
+                }
+                else if(json !=null){
+                    response.setContentType("application/json");
+                    out.print(json);
                 }
                 
-               
                 
-                
+            
             }
         } catch (Exception e) {
             PrintWriter out = response.getWriter();

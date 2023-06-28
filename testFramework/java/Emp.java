@@ -1,10 +1,7 @@
 package model;
 
-import etu1900.framework.util.Crud;
-import etu1900.framework.util.Auth;
-import etu1900.framework.util.FileUpload;
-import etu1900.framework.util.ModelView;
-import etu1900.framework.util.Scope;
+import etu1900.framework.util.*;
+
 
 @Scope(value = "singleton")
 public class Emp {
@@ -80,6 +77,19 @@ public class Emp {
     public void setNom(String n){
         this.nom=n;
     }
+
+    @API
+    @Crud(url = "/get-all.go")
+    public Emp[] getAll(){
+        Emp[] listes= new Emp[5];
+        listes[0]= new Emp("Mirija");
+        listes[1]= new Emp("Toky");
+        listes[2]= new Emp("Mendrika");
+        listes[3]= new Emp("Tahiry");
+        listes[4]= new Emp("Jeremie");
+        return listes;
+    }
+
 
     @Auth(profil = "Mirija")
     @Crud(url = "/emp-all.go")
