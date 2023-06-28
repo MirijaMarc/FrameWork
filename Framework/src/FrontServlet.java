@@ -21,6 +21,7 @@ import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Map.Entry;
 
+import com.google.gson.Gson;
 
 import java.util.*;
 
@@ -136,12 +137,22 @@ public class FrontServlet extends HttpServlet {
                         }
                     }
                 }
-                HashMap<String, Object> data = mv.getData();
-                for(Entry mapentry : data.entrySet()){
-                    request.setAttribute((String)mapentry.getKey(),mapentry.getValue());
-                } 
-                RequestDispatcher dispatch = request.getRequestDispatcher(mv.getView());
-                dispatch.forward(request,response);
+
+                if (mv.isJson()){
+                    Gson gson = new Gson();
+                    HashMap<String, Object> data = mv.getData();
+                    response.setContentType("application/json");
+                    out.print(gson.toJson(data));
+                }else{
+                    HashMap<String, Object> data = mv.getData();
+                    for(Entry mapentry : data.entrySet()){
+                        request.setAttribute((String)mapentry.getKey(),mapentry.getValue());
+                    } 
+                    RequestDispatcher dispatch = request.getRequestDispatcher(mv.getView());
+                    dispatch.forward(request,response);
+                }
+                
+               
                 
                 
             }

@@ -7,10 +7,15 @@ public class ModelView{
     String view;
     HashMap<String, Object> data= new HashMap<String, Object>(); 
     HashMap<String, Object> sessions = new HashMap<String, Object>();
+    boolean isJson;
 
     public ModelView() {
+        setJsonName("data");
+        setJson(false);
     }
     public ModelView(String view) {
+        setJson(false);
+        setJsonName("data");
         this.view = view;
     }
     public String getView() {
@@ -42,6 +47,13 @@ public class ModelView{
     public void addSession(String key, Object value){
         this.sessions.putIfAbsent(key, value);
     }
+    public boolean isJson() {
+        return isJson;
+    }
+    public void setJson(boolean isJson) {
+        this.isJson = isJson;
+    }
+    
 
     
 }
