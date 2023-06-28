@@ -93,6 +93,7 @@ public class Emp {
         listes[4]= new Emp("Jeremie");
         mv.setView("emp.jsp");
         mv.addItem("lst",listes);
+        mv.setJson(true);
         return mv;
     }
 
