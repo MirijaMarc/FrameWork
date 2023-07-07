@@ -82,11 +82,11 @@ public class Emp {
     @Crud(url = "/get-all.go")
     public Emp[] getAll(){
         Emp[] listes= new Emp[5];
-        listes[0]= new Emp("Mirija");
-        listes[1]= new Emp("Toky");
-        listes[2]= new Emp("Mendrika");
-        listes[3]= new Emp("Tahiry");
-        listes[4]= new Emp("Jeremie");
+        listes[0]= new Emp("Mirija","Marc","30-11-03");
+        listes[1]= new Emp("Toky","Judi","25-09-04");
+        listes[2]= new Emp("Mendrika","Safidy","13-06-05");
+        listes[3]= new Emp("Tahiry","Henintsoa","25-12-12");
+        listes[4]= new Emp("Jeremie","Ravelison","22-07-22");
         return listes;
     }
 
@@ -125,6 +125,5 @@ public class Emp {
         mv.addItem("emp", result);
         return mv;
     }
-
 
 }

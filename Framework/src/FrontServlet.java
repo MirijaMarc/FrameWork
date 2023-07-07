@@ -173,14 +173,11 @@ public class FrontServlet extends HttpServlet {
                     response.setContentType("application/json");
                     out.print(json);
                 }
-                
-                
-            
+
             }
         } catch (Exception e) {
-            PrintWriter out = response.getWriter();
             e.printStackTrace();
-            out.print(e);
+            response.getWriter().print(e);
         }
        
 
